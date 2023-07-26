@@ -49,6 +49,13 @@ class RestaurantController extends AbstractController
             'restaurant' => $restaurant,
         ]);
     }
+    #[Route('/codepostal/{codepostal}', name: 'app_restaurant_codepostal', methods: ['GET'])]
+    public function indexByCodePostal(RestaurantRepository $restaurantRepository, string $codepostal): Response
+    {
+        return $this->render('restaurant/index.html.twig', [
+            'restaurants' => $restaurantRepository->findByCodePostal($codepostal),
+        ]);
+    }
 
     #[Route('/{id}/edit', name: 'app_restaurant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): Response
@@ -71,7 +78,7 @@ class RestaurantController extends AbstractController
     #[Route('/{id}', name: 'app_restaurant_delete', methods: ['POST'])]
     public function delete(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$restaurant->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $restaurant->getId(), $request->request->get('_token'))) {
             $entityManager->remove($restaurant);
             $entityManager->flush();
         }

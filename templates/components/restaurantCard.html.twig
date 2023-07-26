@@ -1,0 +1,31 @@
+<div style="width: 300px">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{{ restaurant.name }}</h4>
+      <h6 class="card-subtitle mb-2 text-muted">
+        {{ restaurant.user.firstname }}
+      </h6>
+      <p class="card-text">{{ restaurant.description }}</p>
+      <p class="card-text">
+        {{ restaurant.ville.name }} - {{ restaurant.ville.codePostal }}
+      </p>
+      <p class="card-text">
+        {{ restaurant.rating | number_format(2)}}
+      </p>
+      <div class="card-footer text-muted d-flex justify-content-between">
+        <span> {{ restaurant.createdAt | ago }}</span>
+        <div class="d-flex justify-content-end">
+          <a href="{{ path('app_restaurant_show', { id: restaurant.id }) }}"
+            >Voir</a
+          >
+          {% if is_granted('ROLE_MODERATEUR') or
+          (is_granted('ROLE_RESTAURATEUR') and restaurant.user == app.user) %}
+          <a href="{{ path('app_restaurant_edit', { id: restaurant.id }) }}"
+            >Modifier</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

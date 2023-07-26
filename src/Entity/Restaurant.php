@@ -46,6 +46,15 @@ class Restaurant
         $this->createdAt = new \DateTime();
     }
 
+    public function getRating(): ?float
+    {
+        $total = 0;
+        foreach ($this->avis as $avi) {
+            $total += $avi->getRating();
+        }
+        return $total / count($this->avis);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

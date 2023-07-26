@@ -21,28 +21,62 @@ class RestaurantRepository extends ServiceEntityRepository
         parent::__construct($registry, Restaurant::class);
     }
 
-//    /**
-//     * @return Restaurant[] Returns an array of Restaurant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //Get 10 last created restaurants
+    public function findLastCreated(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Restaurant
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    // GET top 10 restaurants with the best average rating
+    public function findTopTen(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.avis', 'a')
+            ->addSelect('avg(a.rating) as HIDDEN moyenne')
+            ->orderBy('moyenne', 'DESC')
+            ->groupBy('r.id')
+            ->setMaxResults(12)
+            ->getQuery()
+            ->getResult();
+    }
+
+    //findby CodePostal
+    public function findByCodePostal(string $codePostal): array
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.ville', 'v')
+            ->andWhere('v.codePostal = :codePostal')
+            ->setParameter('codePostal', $codePostal)
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    /**
+    //     * @return Restaurant[] Returns an array of Restaurant objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('r.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Restaurant
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
