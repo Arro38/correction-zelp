@@ -42,6 +42,7 @@ class Avis
     public function __construct()
     {
         $this->avis = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
